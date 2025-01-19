@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom Chatbot with Flask - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: "Courier New", monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bloom Chatbot with Flask</h1>
+    <p>This project implements a chatbot using the <strong>Bloom-1.7B</strong> language model from Hugging Face's <code>transformers</code> library. The chatbot is served via a <strong>Flask</strong> web application, allowing users to interact with the model through a simple API endpoint. The application supports CORS (Cross-Origin Resource Sharing) for seamless integration with frontend applications.</p>
+
+    <div class="section">
+        <h2>Features</h2>
+        <ul>
+            <li><strong>Bloom-1.7B Model</strong>: Utilizes the powerful Bloom-1.7B causal language model for generating human-like responses.</li>
+            <li><strong>Flask API</strong>: Provides a RESTful API endpoint (<code>/chat</code>) for sending user messages and receiving model-generated responses.</li>
+            <li><strong>CORS Support</strong>: Enables cross-origin requests from a specified frontend origin (e.g., <code>http://127.0.0.1:5500</code>).</li>
+            <li><strong>Health Check</strong>: Includes a health check endpoint (<code>/</code>) to verify that the chatbot is running.</li>
+            <li><strong>Error Handling</strong>: Robust error handling for invalid requests, model loading issues, and inference errors.</li>
+            <li><strong>Device Optimization</strong>: Automatically uses GPU if available, otherwise falls back to CPU.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Prerequisites</h2>
+        <p>Before running the application, ensure you have the following installed:</p>
+        <ul>
+            <li>Python 3.8 or higher</li>
+            <li><code>pip</code> (Python package manager)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Installation</h2>
+        <ol>
+            <li><strong>Clone the repository</strong>:
+                <pre><code>git clone https://github.com/attributeyielding/Smart_Chat_Bot.git
+cd bloom-chatbot</code></pre>
+            </li>
+            <li><strong>Create a virtual environment</strong> (optional but recommended):
+                <pre><code>python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`</code></pre>
+            </li>
+            <li><strong>Install dependencies</strong>:
+                <pre><code>pip install -r requirements.txt</code></pre>
+                The <code>requirements.txt</code> file should include:
+                <pre>flask
+torch
+transformers
+flask-cors</pre>
+            </li>
+            <li><strong>Download the Bloom-1.7B model</strong>:
+                <ul>
+                    <li>The application will automatically download the model if it is not already present in the <code>data/bloom-1b7</code> directory.</li>
+                    <li>Ensure you have sufficient disk space (approximately 5-10 GB) for the model.</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Running the Application</h2>
+        <ol>
+            <li><strong>Start the Flask server</strong>:
+                <pre><code>python app.py</code></pre>
+            </li>
+            <li>The application will run on <code>http://0.0.0.0:5000</code> by default. You can access the health check endpoint at:
+                <pre><code>http://127.0.0.1:5000/</code></pre>
+            </li>
+            <li><strong>Interact with the chatbot</strong>:
+                <p>Send a POST request to the <code>/chat</code> endpoint with a JSON payload containing the user's message:</p>
+                <pre><code>{
+    "message": "Hello, how are you?"
+}</code></pre>
+                <p>Example using <code>curl</code>:</p>
+                <pre><code>curl -X POST http://127.0.0.1:5000/chat \
+-H "Content-Type: application/json" \
+-d '{"message": "Hello, how are you?"}'</code></pre>
+                <p>The response will be in JSON format:</p>
+                <pre><code>{
+    "response": "I am doing well, thank you! How can I assist you today?"
+}</code></pre>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Configuration</h2>
+        <ul>
+            <li><strong>CORS Origins</strong>: By default, the application allows requests from <code>http://127.0.0.1:5500</code>. To modify this, update the <code>origins</code> parameter in the <code>CORS</code> initialization:
+                <pre><code>CORS(app, origins="http://your-frontend-url.com", supports_credentials=True)</code></pre>
+            </li>
+            <li><strong>Model Path</strong>: The model is saved and loaded from the <code>data/bloom-1b7</code> directory. You can change this by modifying the <code>MODEL_PATH</code> variable in the code.</li>
+            <li><strong>Device</strong>: The application automatically detects and uses a GPU if available. To force CPU usage, modify the <code>device</code> variable:
+                <pre><code>device = torch.device("cpu")</code></pre>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>API Endpoints</h2>
+        <h3>1. Health Check</h3>
+        <ul>
+            <li><strong>Endpoint</strong>: <code>GET /</code></li>
+            <li><strong>Description</strong>: Verifies that the chatbot is running.</li>
+            <li><strong>Response</strong>: Plain text string: <code>"Chatbot is running!"</code></li>
+        </ul>
+        <h3>2. Chat</h3>
+        <ul>
+            <li><strong>Endpoint</strong>: <code>POST /chat</code></li>
+            <li><strong>Description</strong>: Accepts a user message and returns a model-generated response.</li>
+            <li><strong>Request Body</strong>:
+                <pre><code>{
+    "message": "Your input message here"
+}</code></pre>
+            </li>
+            <li><strong>Response</strong>:
+                <pre><code>{
+    "response": "Model-generated response here"
+}</code></pre>
+            </li>
+            <li><strong>Error Responses</strong>:
+                <ul>
+                    <li><code>400 Bad Request</code>: If no message is provided.</li>
+                    <li><code>415 Unsupported Media Type</code>: If the <code>Content-Type</code> header is not <code>application/json</code>.</li>
+                    <li><code>500 Internal Server Error</code>: If an error occurs during model inference.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Troubleshooting</h2>
+        <ul>
+            <li><strong>Model Download Issues</strong>: Ensure you have a stable internet connection and sufficient disk space. If the download fails, manually download the model using:
+                <pre><code>tokenizer = BloomTokenizerFast.from_pretrained("bigscience/bloom-1b7")
+model = BloomForCausalLM.from_pretrained("bigscience/bloom-1b7")
+tokenizer.save_pretrained("data/bloom-1b7")
+model.save_pretrained("data/bloom-1b7")</code></pre>
+            </li>
+            <li><strong>GPU Not Detected</strong>: If you have a GPU but it is not being used, ensure that <code>torch</code> is installed with CUDA support:
+                <pre><code>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118</code></pre>
+            </li>
+            <li><strong>CORS Errors</strong>: Ensure the frontend URL is correctly specified in the <code>CORS</code> configuration.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>License</h2>
+        <p>This project is licensed under the MIT License. See the <a href="LICENSE">LICENSE</a> file for details.</p>
+    </div>
+
+    <div class="section">
+        <h2>Acknowledgments</h2>
+        <ul>
+            <li><a href="https://huggingface.co/">Hugging Face</a> for the <code>transformers</code> library and the Bloom model.</li>
+            <li><a href="https://flask.palletsprojects.com/">Flask</a> for the web framework.</li>
+            <li><a href="https://pytorch.org/">PyTorch</a> for the deep learning framework.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
