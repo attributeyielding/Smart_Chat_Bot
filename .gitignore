@@ -158,3 +158,11 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+data/bloom-1b7/config.json
+data/bloom-1b7/generation_config.json
+data/bloom-1b7/model-00001-of-00002.safetensors
+data/bloom-1b7/model-00002-of-00002.safetensors
+data/bloom-1b7/model.safetensors.index.json
+data/bloom-1b7/special_tokens_map.json
+data/bloom-1b7/tokenizer.json
+data/bloom-1b7/tokenizer_config.json
